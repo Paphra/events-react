@@ -10,11 +10,11 @@ var app = express();
 
 const connection = mysql.createConnection({
 
-  username: 'b63f37a32a1cb9',
+  user: 'b63f37a32a1cb9',
   password: 'f6988e0a',
   host: 'us-cdbr-iron-east-01.cleardb.net',
   database: 'heroku_cf2e7558c1ec541'
-  
+
   /*
   host: 'localhost',
   user: 'root',
