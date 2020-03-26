@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 26, 2020 at 08:13 AM
+-- Generation Time: Mar 26, 2020 at 05:36 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.3.14
 
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `events_system`
+-- Database: `events-cms`
 --
 
 -- --------------------------------------------------------
@@ -91,9 +91,9 @@ CREATE TABLE `events` (
   `e_coordinates` varchar(100) COLLATE utf8_bin DEFAULT NULL,
   `e_venue` text COLLATE utf8_bin NOT NULL,
   `e_start_date` date NOT NULL,
-  `e_start_time` time NOT NULL,
+  `e_start_time` time DEFAULT NULL,
   `e_end_date` date NOT NULL,
-  `e_end_time` time NOT NULL,
+  `e_end_time` time DEFAULT NULL,
   `e_price` int(11) DEFAULT NULL,
   `e_discount` int(11) NOT NULL DEFAULT 0,
   `e_tickets` int(11) DEFAULT NULL,
@@ -112,7 +112,8 @@ CREATE TABLE `events` (
 
 INSERT INTO `events` (`e_id`, `e_title`, `e_description`, `e_slogan`, `e_address`, `e_coordinates`, `e_venue`, `e_start_date`, `e_start_time`, `e_end_date`, `e_end_time`, `e_price`, `e_discount`, `e_tickets`, `e_organizers`, `e_partners`, `e_guests`, `e_image`, `e_created_by`, `e_status`, `e_entry_date`) VALUES
 ('6385119912034923891005232', 'Work Hard, Play Hard', 'Come and face challenges including Bootcamping, free throw, free kick, spinning, Boxing and dances Such as, Salsa and Sukuma', 'Entertainment and so much more', '5th Street Sports Hub, Kampala Road', NULL, 'Sports Hub', '2020-03-25', '09:30:00', '2020-03-31', '20:20:00', 23000, 0, 344, 'Ultimate Sports Events, Kampala', 'Ultimate Fitness Kampala', 'Katamba', '1584893379898-IMG-20200317-WA0001.jpg', 'Epaphradito Lugayavu', 'Active', '2020-03-22 16:09:39'),
-('8015338325005294350482913', 'Ultimate Jinja Ride', 'Come ride with all of us and heal our bodies', 'A Breathe taking ride', '5th Street Sports Hub, Kampala Road', NULL, 'Kampala-Jinja', '2020-03-28', '09:30:00', '2020-03-30', '20:30:00', 30000, 9, 23, 'Ultimate Sports Events, Kampala', 'Ultimate Fitness Kampala', 'Lutamaguzi', '1584894057733-IMG-20200315-WA0004.jpg', 'Epaphradito Lugayavu', 'Active', '2020-03-22 16:20:57');
+('8015338325005294350482913', 'Ultimate Jinja Ride', 'Come ride with all of us and heal our bodies', 'A Breathe taking ride', '5th Street Sports Hub, Kampala Road', NULL, 'Kampala-Jinja', '2020-03-28', '09:30:00', '2020-03-30', '20:30:00', 30000, 9, 23, 'Ultimate Sports Events, Kampala', 'Ultimate Fitness Kampala', 'Lutamaguzi', '1584894057733-IMG-20200315-WA0004.jpg', 'Epaphradito Lugayavu', 'Active', '2020-03-22 16:20:57'),
+('8758981987806212542712114', 'Work and Get Tired', 'The best in the entire world \\n all for you to enjoy', 'Resting is the Next Thing', 'entebbe, UGanda', NULL, 'Sports Entebbe Org', '2020-03-30', '10:20:00', '2020-03-31', '20:10:00', 30000, 3, 35, 'Ultimate Sports Envents', 'Ultimate Fitness Kampala', 'Me and the Entire world', '1585234877838-news-1.jpg', 'Epap Luta', 'Active', '2020-03-26 15:01:18');
 
 -- --------------------------------------------------------
 
@@ -145,8 +146,17 @@ CREATE TABLE `messages` (
   `m_sender_name` varchar(100) COLLATE utf8_bin NOT NULL,
   `m_sender_email` varchar(100) COLLATE utf8_bin NOT NULL,
   `m_message` text COLLATE utf8_bin NOT NULL,
-  `m_entry_date` timestamp NOT NULL DEFAULT current_timestamp()
+  `m_reply` text COLLATE utf8_bin DEFAULT NULL,
+  `m_entry_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `m_sender_phone` varchar(25) COLLATE utf8_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `messages`
+--
+
+INSERT INTO `messages` (`m_id`, `m_sender_name`, `m_sender_email`, `m_message`, `m_reply`, `m_entry_date`, `m_sender_phone`) VALUES
+('8928772003144247698956981', 'Epaphradito Lugayavu', 'paphra.me@gmail.com', 'This is so cool', NULL, '2020-03-26 15:25:05', '0701822382');
 
 -- --------------------------------------------------------
 
@@ -223,6 +233,7 @@ CREATE TABLE `users` (
   `u_username` varchar(15) COLLATE utf8_bin NOT NULL,
   `u_password` varchar(100) COLLATE utf8_bin NOT NULL,
   `u_role` varchar(25) COLLATE utf8_bin NOT NULL,
+  `u_partner` varchar(100) COLLATE utf8_bin NOT NULL,
   `u_entry_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -230,8 +241,8 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`u_id`, `u_full_name`, `u_email`, `u_phone`, `u_username`, `u_password`, `u_role`, `u_entry_date`) VALUES
-('2348596039485948593049283', 'Epaphradito Lugayavu', 'paphra.me@gmail.com', '070182382', 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 'Admin', '2020-03-13 12:08:47');
+INSERT INTO `users` (`u_id`, `u_full_name`, `u_email`, `u_phone`, `u_username`, `u_password`, `u_role`, `u_partner`, `u_entry_date`) VALUES
+('2348596039485948593049283', 'Epaphradito Lugayavu', 'paphra.me@gmail.com', '070182382', 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 'Admin', '', '2020-03-13 12:08:47');
 
 --
 -- Indexes for dumped tables
@@ -266,7 +277,9 @@ ALTER TABLE `maillist`
 -- Indexes for table `messages`
 --
 ALTER TABLE `messages`
-  ADD PRIMARY KEY (`m_id`);
+  ADD PRIMARY KEY (`m_id`),
+  ADD UNIQUE KEY `m_sender_email` (`m_sender_email`),
+  ADD UNIQUE KEY `m_sender_phone` (`m_sender_phone`);
 
 --
 -- Indexes for table `news`

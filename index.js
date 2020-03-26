@@ -9,15 +9,16 @@ var bodyParser = require('body-parser');
 var app = express();
 
 const connection = mysql.createConnection({
-/*  host: 'us-cdbr-gcp-east-01.cleardb.net',
-  username: 'b53eaa975eb565',
-  passsword: '2db2003b',
-  database: 'gcp_5f2427ca932d0fc639b1'
-*/
+
+  username: 'b2942e827778c7',
+  password: '909cfe16',
+  host: 'us-cdbr-iron-east-01.cleardb.net',
+  database: 'heroku_82cceefae4296cc'
+  /*
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'events-cms'
+  database: 'events-cms' */
 });
 
 connection.connect(function (err) {
