@@ -8,7 +8,9 @@ const UpEvents =(props)=>{
 
   const [showBook, setShowBook] = useState(false);
   const events = props.events;
-
+  const evalDate =(date)=>{
+    return (new Date(date)) > (new Date());
+  }
   return (
       <CardColumns >
         {(events) ? events.map((ev, idx) => (
@@ -27,12 +29,17 @@ const UpEvents =(props)=>{
                     At {ev.e_venue}<br />
                     Date: {makeDate(ev.e_start_date, ev.e_start_time).txt} <br />
               </Card.Text>
-              <Button variant="primary" onClick={()=>{setShowBook(true)}}>Book/Buy Ticket</Button>
-              <ModalBookEvent
-                event={ev}
-                show={showBook}
-                onHide={() => { setShowBook(false) }}
-              />
+              {evalDate(ev.e_start_date) ?
+               <div>
+                  <Button variant="primary" onClick={() => { setShowBook(true) }}>Book/Buy Ticket</Button>
+                  <ModalBookEvent
+                    event={ev}
+                    show={showBook}
+                    onHide={() => { setShowBook(false) }}
+                  />
+               </div>
+              : ()=>{} }
+              
             </Card.Body>
           </Card>
         )) : <h4>No Events to Display</h4>}

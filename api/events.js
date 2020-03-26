@@ -3,7 +3,7 @@ var multer = require('multer');
 const mysql = require('mysql');
 module.exports = (app, connection)=>{
   app.get('/api/events', function(req, res){
-    connection.query('SELECT * FROM events;',
+    connection.query('SELECT * FROM events order by e_start_date asc;',
       function(err, data){
         (err)?res.send(err):res.json({events:data});
     })

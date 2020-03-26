@@ -23,6 +23,10 @@ const Events =(props)=>{
   useEffect(()=>{
     getEvents(setEvents);
   }, []);
+
+  const checkDate = (date) => {
+    return (new Date(date)) > (new Date());
+  }
   
   document.getElementById('title').innerHTML = 'Events | Events Management System';
   return (
@@ -57,12 +61,17 @@ const Events =(props)=>{
                 Date: {makeDate(ev.e_start_date, ev.e_start_time).txt} <br />
                 Upto: {makeDate(ev.e_end_date, ev.e_end_time).txt}
               </Card.Text>
-              <Button variant="primary" onClick={()=>{setShowBook(true)}}>Book/Buy Ticket</Button>
-              <ModalBookEvent
-                event={ev}
-                show={showBook}
-                onHide={() => { setShowBook(false) }}
-              />
+              
+              {checkDate(ev.e_start_date) ?
+                <div>
+                  <Button variant="primary" onClick={() => { setShowBook(true) }}>Book/Buy Ticket</Button>
+                  <ModalBookEvent
+                    event={ev}
+                    show={showBook}
+                    onHide={() => { setShowBook(false) }}
+                  />
+                </div>
+                : () => { }}
 
             </Card.Body>
           </Card>

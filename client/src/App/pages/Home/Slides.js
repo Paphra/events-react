@@ -8,11 +8,14 @@ const Slides = (props) => {
 
   const [showBook, setShowBook] = useState(false);
   const events = props.events;
-
+  const checkDate =(date)=>{
+    return (new Date(date)) > (new Date());
+  } 
   return (
     <div>
       <Carousel>
         {events.map((ev, index) =>
+        checkDate(ev.e_start_date) ?
           <Carousel.Item key={index}>
             <img
               className="d-block w-100"
@@ -26,8 +29,8 @@ const Slides = (props) => {
                 <h4>{ev.e_tickets} Tickets Left.</h4>
                 <h5>{countDown(ev.e_start_date, ev.e_start_time)}</h5>
                 <p>{ev.e_description}</p>
-              </div><br/>
-              <Button variant="primary" onClick={()=>{setShowBook(true)}}>Book/Buy Ticket</Button>
+              </div><br />
+              <Button variant="primary" onClick={() => { setShowBook(true) }}>Book/Buy Ticket</Button>
               <ModalBookEvent
                 event={ev}
                 show={showBook}
@@ -36,6 +39,7 @@ const Slides = (props) => {
 
             </Carousel.Caption>
           </Carousel.Item>
+        : ()=>{}
         )}
       </Carousel>
     </div> 
