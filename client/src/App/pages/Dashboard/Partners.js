@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import {getPartners, makeDate} from '../Custom/Functions';
-
+import {getPartners, makeDate, getImage} from '../Custom/Functions';
+import axios from 'axios';
 
 const Partners =(props)=>{
   const [partners, setPartners] = useState([]);
@@ -9,38 +9,49 @@ const Partners =(props)=>{
     getPartners(setPartners);
   }, []);
 
+  const deletePartner = id => {
+    let data = {
+      id: id
+    };
+    axios.delete('/api/partner/' + id, data, {})
+      .then(res => {
+        if (res.statusText === 'OK') {
+          alert("Deleted Partner.");
+          getPartners(setPartners);
+        } else {
+          alert("Failed To Delete Partner.");
+        }
+      });
+  }
+
   return (
     <div>
-      <table border='1' width='100%'>
-        <thead>
-          <tr>
-            <th>Date/Time</th>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Description</th>
-            <th>Logo</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {partners ? partners.map((ptn, ix) => {
-            return (
-              <tr key={ix}>
-                <td>{makeDate(ptn.p_entry_date).txt}</td>
-                <td>{ptn.p_name}</td>
-                <td>{ptn.p_address}</td>
-                <td>{ptn.p_description}</td>
-                <td>{ptn.p_logo}</td>
-                <td>
-                  <a href='#edit'><i className='fa fa-refresh'></i></a>
-                  <a href='#delete' ><i className='fa fa-trash'></i></a>
-                </td>
-              </tr>
-            )
-          }) : <tr><td colSpan='6'><h6>No Partners Found!</h6></td></tr>}
-
-        </tbody>
-      </table>
+      {partners.length ? partners.map((p, ix) => {
+        return (
+          <div key={ix} className='row list-item'>
+            <div className='col-md-4'>
+              <img width='90%' src={getImage(p.p_logo, 'partners')} alt={p.p_name} />
+              <p>Registered: <b>{makeDate(p.p_entry_date).txt}</b></p>
+            </div>
+            <div className='col-md-6'>
+              <p>Name: <b>{p.p_name}</b></p>
+              <p>Address: <b>{p.p_address}</b></p>
+              <p>Description: {p.p_description}</p>
+            </div>
+            <div className='col-md-2'>
+              <a href='#edit' className='btn btn-primary'>
+                <i className='fa fa-partner'>Edit</i>
+              </a>
+              <br/>
+              <a href='#delete'
+                onClick={() => { deletePartner(p.p_id) }}
+                className='btn btn-danger' >
+                <i className='fa fa-trash'>Delete</i>
+              </a>
+            </div>
+          </div>
+        )
+      }) : <h4>No Partners Found!</h4>}
     </div>
   );
 }

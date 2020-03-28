@@ -23,7 +23,7 @@ const makeDate = (date, time) => {
     dt = new Date(String(date));
   }
 
-  let txt = dt.getFullYear() + '.' + month(dt) + '.' + day(dt) + ' at ';
+  let txt =  dt.getFullYear() + '.' + month(dt) + '.' + day(dt) + ' at ';
   txt += dt.getHours() + ':' + dt.getMinutes();
 
   return {
@@ -49,9 +49,9 @@ const countDown = (date, time) => {
   return d + " days " + rh + " hours to Go";
 }
 
-const getImage=(image)=>{
-  return process.env.PUBLIC_URL + '/images/' + image;
-}
+const getImage=(image, category='events')=>{
+  return process.env.PUBLIC_URL + '/images/' + category + '/' + image;
+} 
 
 const get =(url, call)=>{
   let items = [];
@@ -94,7 +94,12 @@ const getPartners = (callBack) => {
   get('partners', callBack);
 }
 
+const checkDate = (date) => {
+  return (new Date(date)) > (new Date());
+}
+
 export {
+  checkDate,
   getImage,
   makeId,
   makeDate, 

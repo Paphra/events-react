@@ -4,9 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "predeploy": "cd client && npm run build && cd .. && npm run build",
+    "deploy": "gh-pages -d build",
     "start": "node index.js",
     "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
   },
+  "homepage": "http://paphra.github.io/events-cms",
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -18,5 +21,8 @@
     "myql": "^1.0.0",
     "mysql": "^2.18.1",
     "sha1": "^1.1.1"
+  },
+  "devDependencies": {
+    "gh-pages": "^2.2.0"
   }
 }

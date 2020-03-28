@@ -1,12 +1,9 @@
 import React, {useState} from 'react';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Col from 'react-bootstrap/Col';
+import {Form, Button, Modal, Col} from 'react-bootstrap';
 import {makeId} from '../Custom/Functions';
 
-import axios from 'axios';
-import { Redirect } from 'react-router-dom';
+//import axios from 'axios';
+//import { Redirect } from 'react-router-dom';
 
 const ModalBookEvent = (props) => {
   const event = props.event;
@@ -15,7 +12,7 @@ const ModalBookEvent = (props) => {
     return price - Math.ceil((price / 100) * event.e_discount);
   }
 
-  const [redirect, setRedirect] = useState(false);
+  //const [redirect, setRedirect] = useState(false);
   const [amount, setAmount] = useState(discounted(event.e_price));
   const [tickets, setTickets] = useState(1);
 
@@ -31,7 +28,6 @@ const ModalBookEvent = (props) => {
   }
 
   const handleBookEvent = (e) => {
-
     e.preventDefault();
     
     let f = e.target;
@@ -50,6 +46,7 @@ const ModalBookEvent = (props) => {
       b_phone: f.b_phone.value,
     };
     let data = new FormData();
+    Object.keys(fields).map(f => data.append(f, fields[f]));
     alert("Booking Event \n"+ event.e_title);
     /*
     axios.post("http://localhost:9000/bookings", data, { // receive two parameter endpoint url ,form data 
@@ -64,9 +61,12 @@ const ModalBookEvent = (props) => {
     props.onHide();
   }
 
+  /*
   const redirectToEvents = () => {
     if (redirect) return <Redirect to='/events' />
   }
+  */
+
   return (
     <Modal
       show={props.show}
@@ -75,7 +75,7 @@ const ModalBookEvent = (props) => {
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
-      {redirectToEvents()}
+      {/*redirectToEvents()*/}
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
           Book/Pay Ticket for: {event.e_title}

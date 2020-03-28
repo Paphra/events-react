@@ -14,12 +14,13 @@ const connection = mysql.createConnection({
   password: 'f6988e0a',
   host: 'us-cdbr-iron-east-01.cleardb.net',
   database: 'heroku_cf2e7558c1ec541'
-
+  
   /*
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'events-cms' */
+  database: 'events-cms'
+   */
 });
 
 connection.connect(function (err) {

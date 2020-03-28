@@ -1,36 +1,30 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 
+import {makeId, getPartners} from '../Custom/Functions';
+
 import axios from 'axios';
 import {Redirect} from 'react-router-dom';
 
-class ModalAddEvent extends React.Component{
+const ModalAddEvent =(props)=>{
 
-  constructor(props){
-    super(props);
-    this.state= {
-      image: null,
-      redirect: false,
-    }
-  }
+  const [image, setImage] = useState(null);
+  const [redirect, setRedirect] = useState(false);
+  const [partners, setPartners] = useState([]);
 
-  makeId = () => {
-    let id = '';
-    for (let index = 0; index < 25; index++) {
-      id += String(Math.floor(Math.random() * 10));
-    }
-    return id;
-  }
-
-  handleAddEvent = (e) => {
+  useEffect(()=>{
+    getPartners(setPartners);
+  }, []);
+  
+  const handleAddEvent = (e) => {
     e.preventDefault();
     
     let f = e.target;
     let fields = {
-      e_id: this.makeId(), 
+      e_id: makeId(), 
       e_title: f.e_title.value, 
       e_description: f.e_description.value,
       e_slogan: f.e_slogan.value,
@@ -48,168 +42,158 @@ class ModalAddEvent extends React.Component{
       e_created_by: f.e_created_by.value,
       e_partners: f.e_partners.value,
       e_status: f.e_status.value,
-      e_image: this.state.image
+      e_image: image
     };
     let data = new FormData();
-    Object.keys(fields).map(f=>data.append(f, fields[f]))
-    axios.post("/api/events", data, { // receive two parameter endpoint url ,form data 
-    })
+    Object.keys(fields).map(f=>data.append(f, fields[f]));
+    
+    axios.post("/api/events", data, {})
       .then(res => { // then print response status
         if(res.statusText === 'OK'){
-          this.setRedirect();
+          setRedirect(true);
+        }else{
+          alert("Failed To Add Event.")
         }
-      })
+      });
   }
 
-  redirectToEvents =()=>{
-    if (this.state.redirect) return <Redirect to='/events' />
+  const redirectToEvents =()=>{
+    if (redirect) return <Redirect to='/events' />
   }
 
-  setRedirect =()=>{
-    this.setState({redirect:true});
+  const fileChange =e=>{
+    setImage(e.target.files[0]);
   }
+  
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      {redirectToEvents()}
 
-  eventStatusChange =(e)=>{
-    alert('Status Changed');
-  }
-
-  fileChange =e=>{
-    this.setState({
-      image: e.target.files[0],
-      loaded: 0,
-    });
-  }
-
-  render(){
-    return (
-      <Modal
-        {...this.props}
-        size="md"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        {this.redirectToEvents()}
-    
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            Add Event
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Add Event
         </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={this.handleAddEvent} method='POST'>
-            <Form.Row>
-              <Form.Group as={Col} controlId="e_title">
-                <Form.Label>Event Title</Form.Label>
-                <Form.Control type="text" placeholder="Enter Event Title" required={true} />
-              </Form.Group>
-
-              <Form.Group as={Col} controlId="e_slogan">
-                <Form.Label>Slogan</Form.Label>
-                <Form.Control type="text" placeholder="Catch Phrase" required={true} />
-              </Form.Group>
-            </Form.Row>
-            <Form.Group controlId="e_image">
-              <Form.Label>Poster</Form.Label>
-              <Form.Control type="file" onChange={this.fileChange} placeholder="Poster for the Event" />
+      </Modal.Header>
+      <Modal.Body>
+        <Form onSubmit={handleAddEvent} method='POST'>
+          <Form.Row>
+            <Form.Group as={Col} controlId="e_title">
+              <Form.Label>Event Title</Form.Label>
+              <Form.Control type="text" placeholder="Enter Event Title" required={true} />
             </Form.Group>
 
-            <Form.Group controlId="e_venue">
-              <Form.Label>Venue</Form.Label>
-              <Form.Control type='text' placeholder="Event Venue" required={true} />
+            <Form.Group as={Col} controlId="e_slogan">
+              <Form.Label>Slogan</Form.Label>
+              <Form.Control type="text" placeholder="Catch Phrase" required={true} />
+            </Form.Group>
+          </Form.Row>
+          <Form.Group controlId="e_image">
+            <Form.Label>Poster</Form.Label>
+            <Form.Control type="file" onChange={fileChange} placeholder="Poster for the Event" />
+          </Form.Group>
+
+          <Form.Group controlId="e_venue">
+            <Form.Label>Venue</Form.Label>
+            <Form.Control type='text' placeholder="Event Venue" required={true} />
+          </Form.Group>
+
+          <Form.Group controlId="e_address">
+            <Form.Label>Address</Form.Label>
+            <Form.Control type='text' placeholder="5th Street, Indutrial Area, Kampala" required={true} />
+          </Form.Group>
+          <hr />
+          <Form.Label><h5>Tickets</h5></Form.Label>
+          <Form.Row>
+            <Form.Group as={Col} controlId="e_price">
+              <Form.Label>Price</Form.Label>
+              <Form.Control type='number' min='0' max='100000000' required={true} />
             </Form.Group>
 
-            <Form.Group controlId="e_address">
-              <Form.Label>Address</Form.Label>
-              <Form.Control type='text' placeholder="5th Street, Indutrial Area, Kampala" required={true} />
-            </Form.Group>
-            <hr />
-            <Form.Label><h5>Tickets</h5></Form.Label>
-            <Form.Row>
-              <Form.Group as={Col} controlId="e_price">
-                <Form.Label>Price</Form.Label>
-                <Form.Control type='number' min='0' max='100000000' required={true} />
-              </Form.Group>
-
-              <Form.Group as={Col} controlId="e_tickets">
-                <Form.Label>No. of Seats</Form.Label>
-                <Form.Control type='number' min='0' max='500000' required={true} />
-              </Form.Group>
-
-              <Form.Group as={Col} controlId="e_discount">
-                <Form.Label>Discount [%]</Form.Label>
-                <Form.Control type='number' min='0' max='100' />
-              </Form.Group>
-            </Form.Row>
-
-            <Form.Label>Date and Time</Form.Label>
-            <Form.Row>
-              <Form.Group as={Col} controlId="e_start_date">
-                <Form.Label>Start Date</Form.Label>
-                <Form.Control type='date' required={true}/>
-              </Form.Group>
-
-              <Form.Group as={Col} controlId="e_start_time">
-                <Form.Label>Start Time</Form.Label>
-                <Form.Control type='time' min='0' max='500000' />
-              </Form.Group>
-
-              <Form.Group as={Col} controlId="e_end_date">
-                <Form.Label>End Date</Form.Label>
-                <Form.Control type='date' required={true} />
-              </Form.Group>
-
-              <Form.Group as={Col} controlId="e_end_time">
-                <Form.Label>End Time</Form.Label>
-                <Form.Control type='time' min='0' max='500000' />
-              </Form.Group>
-
-            </Form.Row>
-
-            <Form.Group controlId="e_description">
-              <Form.Label>Description</Form.Label>
-              <Form.Control as='textarea' required={true} placeholder='Event Description' />
+            <Form.Group as={Col} controlId="e_tickets">
+              <Form.Label>No. of Seats</Form.Label>
+              <Form.Control type='number' min='0' max='500000' required={true} />
             </Form.Group>
 
-            <Form.Group controlId="e_guests">
-              <Form.Label>Event Guests</Form.Label>
-              <Form.Control as='textarea' placeholder='Guests' />
+            <Form.Group as={Col} controlId="e_discount">
+              <Form.Label>Discount [%]</Form.Label>
+              <Form.Control type='number' min='0' max='100' />
+            </Form.Group>
+          </Form.Row>
+
+          <Form.Label>Date and Time</Form.Label>
+          <Form.Row>
+            <Form.Group as={Col} controlId="e_start_date">
+              <Form.Label>Start Date</Form.Label>
+              <Form.Control type='date' required={true} />
             </Form.Group>
 
-            <Form.Group controlId="e_partners">
-              <Form.Label>Partners</Form.Label>
-              <Form.Control as="select" required={true}>
-                <option value='Ultimate Fitness Kampala'>Ultimate Fitness Kampala</option>
-                <option value='Ultimate Cycling Kampala'>Ultimate Cycling Kampala</option>
-              </Form.Control>
+            <Form.Group as={Col} controlId="e_start_time">
+              <Form.Label>Start Time</Form.Label>
+              <Form.Control type='time' min='0' max='500000' />
             </Form.Group>
 
-            <Form.Group controlId="e_organizers">
-              <Form.Label>Organizers</Form.Label>
-              <Form.Control type='text' required={true} placeholder='Ultimate Sports Events' />
+            <Form.Group as={Col} controlId="e_end_date">
+              <Form.Label>End Date</Form.Label>
+              <Form.Control type='date' required={true} />
             </Form.Group>
 
-            <Form.Group controlId="e_created_by">
-              <Form.Label>Created By</Form.Label>
-              <Form.Control type='text' required={true} placeholder='Full Name' />
-            </Form.Group>
-            <Form.Group controlId="e_status">
-              <Form.Label>Event Status</Form.Label>
-              <Form.Control as="select" required={true}>
-                <option value='Active'>Active</option>
-                <option value='Inactive'>Inactive</option>
-              </Form.Control>
+            <Form.Group as={Col} controlId="e_end_time">
+              <Form.Label>End Time</Form.Label>
+              <Form.Control type='time' min='0' max='500000' />
             </Form.Group>
 
-            <Modal.Footer>
-              <Button variant="primary" type="submit">Save Event</Button>
-              <Button variant='danger' onClick={this.props.onHide}>Close</Button>
-            </Modal.Footer>
+          </Form.Row>
 
-          </Form>
-        </Modal.Body>
-      </Modal>
-    )
-  }
+          <Form.Group controlId="e_description">
+            <Form.Label>Description</Form.Label>
+            <Form.Control as='textarea' required={true} placeholder='Event Description' />
+          </Form.Group>
+
+          <Form.Group controlId="e_guests">
+            <Form.Label>Event Guests</Form.Label>
+            <Form.Control as='textarea' placeholder='Guests' />
+          </Form.Group>
+
+          <Form.Group as={Col} controlId="e_partners">
+            <Form.Label>Partners</Form.Label>
+            <Form.Control as="select" required={true}>
+              {partners ? partners.map((p, idx) => {
+                return <option value={p.p_name} key={idx}>{p.p_name}</option>;
+              }) : <option value=''></option>}
+            </Form.Control>
+          </Form.Group>
+
+          <Form.Group controlId="e_organizers">
+            <Form.Label>Organizers</Form.Label>
+            <Form.Control type='text' required={true} placeholder='Ultimate Sports Events' />
+          </Form.Group>
+
+          <Form.Group controlId="e_created_by">
+            <Form.Label>Created By</Form.Label>
+            <Form.Control type='text' required={true} placeholder='Full Name' />
+          </Form.Group>
+          <Form.Group controlId="e_status">
+            <Form.Label>Event Status</Form.Label>
+            <Form.Control as="select" required={true}>
+              <option value='Active'>Active</option>
+              <option value='Inactive'>Inactive</option>
+            </Form.Control>
+          </Form.Group>
+
+          <Modal.Footer>
+            <Button variant="primary" type="submit">Save Event</Button>
+            <Button variant='danger' onClick={props.onHide}>Close</Button>
+          </Modal.Footer>
+
+        </Form>
+      </Modal.Body>
+    </Modal>
+  );
 }
 
 export default ModalAddEvent;

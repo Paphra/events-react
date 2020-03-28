@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -6,11 +6,8 @@ import Col from 'react-bootstrap/Col';
 
 //import axios from 'axios';
 
-import { Redirect } from 'react-router-dom';
-
 const ModalEditAbout = (props) => {
   const ab = props.about;
-  const [redirect, setRedirect] = useState(false);
 
   const [name, setName] = useState(ab.a_name);
   const [slogan, setSlogan] = useState(ab.a_slogan);
@@ -42,24 +39,23 @@ const ModalEditAbout = (props) => {
 
     let data = new FormData();
     data.append(fields);
+
+    /*
     let info = {
       id: ab.a_id,
       data: data,
-    }
-    /*
+    };
     axios.patch("http://localhost:9000/about", info, { // receive two parameter endpoint url ,form data 
     })
       .then(res => { // then print response status
         if (res.statusText === 'OK') {
-          setRedirect(true);
+          alert("About Information Update!");
         }
       });
     */
+
   }
 
-  const redirectToEvents = () => {
-    if (redirect) return <Redirect to='/about' />
-  }
   return (
     <Modal
       show={props.show}
@@ -68,7 +64,6 @@ const ModalEditAbout = (props) => {
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
-      {redirectToEvents()}
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
           Edit Business Information

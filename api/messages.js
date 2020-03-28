@@ -18,4 +18,15 @@ module.exports = (app, connection) => {
     });
   });
 
+  app.delete('/api/messages/:id', function (req, res) {
+    let id = req.params.id;
+    let sql = "DELETE FROM messages WHERE m_id='" + id + "';";
+    connection.query(sql, (err, res2) => {
+      if (err) {
+        return res.status(500).json(err);
+      }
+      return res.status(200).send(req.body);
+    });
+  });
+
 }

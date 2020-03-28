@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { countDown, getImage } from '../Custom/Functions.js';
+import { countDown, getImage, checkDate } from '../Custom/Functions.js';
 import {Carousel, Button} from 'react-bootstrap';
 
 import ModalBookEvent from '../Events/ModalBook.js';
@@ -8,9 +8,7 @@ const Slides = (props) => {
 
   const [showBook, setShowBook] = useState(false);
   const events = props.events;
-  const checkDate =(date)=>{
-    return (new Date(date)) > (new Date());
-  } 
+  
   return (
     <div>
       <Carousel>
@@ -36,7 +34,6 @@ const Slides = (props) => {
                 show={showBook}
                 onHide={() => { setShowBook(false) }}
               />
-
             </Carousel.Caption>
           </Carousel.Item>
         : ()=>{}
